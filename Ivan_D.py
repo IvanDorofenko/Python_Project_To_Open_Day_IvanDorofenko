@@ -66,7 +66,10 @@ class FirstApp(MainApp):
 
     def generation_password(self):
         # Отримую довжину пароля з текстового поля.
-        length = int(self.len_field.text())
+        try:
+            length = int(self.len_field.text())
+        except ValueError:
+            return
         letter = string.ascii_uppercase
         digits = string.digits
         password_template = letter + digits
