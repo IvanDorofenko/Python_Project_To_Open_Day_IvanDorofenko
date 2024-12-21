@@ -6,6 +6,9 @@ class FirstApp(MainApp):
     def __init__(self, window_title: str, size_w: int, size_h: int):
         super().__init__(window_title, size_w, size_h)
 
+        self.eng_text = {'Ваш пароль':'Your password:', 'Без букв':"No letters"}
+        self.ru_text = {'Ваш пароль':'Ваш пароль:', 'Без букв':"Без букв"}
+
         # Встановлюю зовнішній вигляд вікна.
         self.setStyleSheet("""
                     QWidget {
@@ -50,8 +53,16 @@ class FirstApp(MainApp):
         self.h_layout2.addWidget(self.len_field)
 
         # Створюю напис для відображення згенерованого пароля.
-        out_label = Qtw.QLabel('Ваш пароль: ')
-        self.h_layout.addWidget(out_label)
+        self.out_label = Qtw.QLabel('Ваш пароль: ')
+
+        button_eng = Qtw.QPushButton('ENG')
+        button_ru = Qtw.QPushButton('RU')
+        self.h_layout.addWidget(button_eng)
+        self.h_layout.addWidget(button_ru)
+        button_eng.clicked.connect(lambda: self.language_change('ENG'))
+        button_ru.clicked.connect(lambda: self.language_change('RU'))
+
+        self.h_layout.addWidget(self.out_label)
 
         # Створюю поле для відображення згенерованого пароля.
         self.password_display = Qtw.QLineEdit()
@@ -69,6 +80,7 @@ class FirstApp(MainApp):
         try:
             length = int(self.len_field.text())
         except ValueError:
+            self.password_display.setText('No letters')
             return
         letter = string.ascii_uppercase
         digits = string.digits
@@ -86,6 +98,15 @@ class FirstApp(MainApp):
 
         # Встановлюю згенерований пароль в поле для відображення.
         self.password_display.setText(password)
+
+    def language_change(self, lang_type):
+        lang = None
+        if lang_type == 'ENG':
+            lang = self.eng_text
+        elif lang_type == 'RU':
+            lang = self.ru_text
+
+        self.out_label.setText(lang['Ваш пароль'])
 
 if __name__ == '__main__':
     # Створюю і запускаю додаток.
